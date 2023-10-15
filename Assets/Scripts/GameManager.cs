@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
                     map[i][j] = flowers[Random.Range(0, flowers.Length)];
                     Vector2Int worldPos = GamePosToWorldPos(new Vector2Int(i, j));
                     tilemap.SetTile(new Vector3Int(worldPos.x, worldPos.y, 0), map[i][j].tile);
-                    Debug.Log(i + " " + j);
                 }
             }
         }
