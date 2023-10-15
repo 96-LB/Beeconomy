@@ -5,55 +5,30 @@ using UnityEngine;
 public class Beehive : MonoBehaviour
 {
     public Recipe recipe;
-    public Dictionary<HoneyType, int> honeyCounts;
-    public Dictionary<FlowerType, int> pollenCounts;
-    public int pollenCollectionRate = 0;
+    public readonly Dictionary<HoneyType, int> honeyCounts = new();
+    public readonly Dictionary<Pollen, int> pollenCounts = new();
+    public int pollenCollectionRate = 1;
     public int collectionRadius = 2;
-    public int xPos;
-    public int yPos;
+    public Vector2Int position;
+    private GameManager game;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        game = GameManager.Instance;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    
     public void CollectPollen() {
-        Dictionary<FlowerType, int> flowerCounts = GetFlowersInCollectionRadius();
-        foreach (var flowerType in flowerCounts.Keys) {
-            pollenCounts.TryAdd(flowerType, 0);
-            pollenCounts[flowerType] += flowerCounts[flowerType] * pollenCollectionRate;
+        foreach (var flower in game.GetFlowers(position, collectionRadius)) {
+            pollenCounts.TryAdd(flower.pollen, 0);
+            pollenCounts[flower.pollen] += flower.amount * pollenCollectionRate;
         }
     }
-
+    
     public void CreateHoney() {
         int producedHoney = recipe.CalcHoneyProduced(pollenCounts);
         honeyCounts.TryAdd(recipe.honeyType, 0);
         honeyCounts[recipe.honeyType] += producedHoney;
         recipe.ConsumePollen(pollenCounts, producedHoney);
-    }
-
-    private Dictionary<FlowerType, int> GetFlowersInCollectionRadius() {
-        var flowerCounts = new Dictionary<FlowerType, int>();
-        for (int i = 0; i < GameManager.flowerGrid.Length; i++) {
-            for (int j = 0; j < GameManager.flowerGrid[i].Length; j++) {
-                if (GameManager.flowerGrid[i][j] == FlowerType.Empty) {
-                    continue;
-                }
-                int distSquared = Math.Max(Math.Abs(xPos-i), Math.Abs(yPos-j));
-                if (distSquared <= collectionRadius*collectionRadius) {
-                    FlowerType flowerType = GameManager.flowerGrid[i][j];
-                    flowerCounts.TryAdd(flowerType, 0);
-                    flowerCounts[flowerType] += 1;
-                }
-            }
-        }
-        return flowerCounts;
     }
 }
