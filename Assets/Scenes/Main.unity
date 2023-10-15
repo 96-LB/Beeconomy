@@ -2119,19 +2119,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beehivePrefab: {fileID: 1081327656940542406, guid: 6f97eb071c4e943da98b38ac4b4ea7a3, type: 3}
+  honeyText: {fileID: 66209730}
   mapSize: {x: 16, y: 16}
   recipes:
   - honeyType: 0
+    requiredPollen: 000000000000000001000000
     priceBounds: {x: 5, y: 15}
     currentPrice: 10
     unlocked: 1
   flowers:
   - name: Clover
-    pollen: 1
+    pollen: 0
     amount: 1
     tile: {fileID: 11400000, guid: 79d089a962450b84bb8df3d440275a89, type: 2}
   - name: Wildflower
-    pollen: 2
+    pollen: 1
     amount: 5
     tile: {fileID: 11400000, guid: 24fb99436e050444c82dbe51eeff16fb, type: 2}
   tilemap: {fileID: 965249604}

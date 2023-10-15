@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     
     public GameObject beehivePrefab;
+    public TextMeshProUGUI honeyText;
 
     public Vector2Int mapSize;
     
@@ -19,12 +19,12 @@ public class GameManager : MonoBehaviour
 
     private Flower[][] map;
     
-    private List<Beehive> beehives = new();
+    private readonly List<Beehive> beehives = new();
     
     public Tilemap tilemap;
 
     private int framesSinceLastTick;
-    private static int TICK_RATE = 250; 
+    private static int TICK_RATE = 250;
     
     private float honey = 0;
     
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         {
             throw new UnityException("GameManager instance already exists.");
         }
-        Instance = this; 
+        Instance = this;
         tilemap.ClearAllTiles();
         map = new Flower[mapSize.x][];
         for(var i = 0; i < mapSize.x; i++)
@@ -54,7 +54,11 @@ public class GameManager : MonoBehaviour
         CreateBeehive(new Vector2Int(2, 3), recipes[0], "Beehive 1");
         CreateBeehive(new Vector2Int(4, 7), recipes[0], "Beehive 2");
     }
-
+    
+    void Update() {
+        honeyText.text = $" ħ{honey}";
+    }
+    
     void FixedUpdate() {
         framesSinceLastTick++;
         if (framesSinceLastTick < TICK_RATE) {
@@ -133,10 +137,10 @@ public class GameManager : MonoBehaviour
             hive
         )).Max();
         ShuffleHives();
-        Debug.Log($"{buyer.hive.name} wants to buy {pollen} for {buyer.bid} {buyer.hive.Value(pollen)}");
+        Debug.Log($"{buyer.hive.name} wants to buy {pollen} for {buyer.bid}");
         
         foreach(Beehive seller in beehives) {
-            const int TAX = 1;
+            const float TAX = 0.99f;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
             Debug.Log($"{seller.name} wants to sell {pollen} for {seller.Value(pollen) + TAX}");
             if(seller.Value(pollen) + TAX >= buyer.bid) continue;

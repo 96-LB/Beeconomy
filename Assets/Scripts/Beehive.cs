@@ -27,7 +27,7 @@ public class Beehive : MonoBehaviour, IComparable
     
     public void CreateHoney() {
         int producedHoney = Mathf.Min(productionRate, recipe.CalcHoneyProduced(inventory));
-        honey += producedHoney;
+        honey += producedHoney * recipe.currentPrice;
         recipe.ConsumePollen(inventory, producedHoney);
     }
 
@@ -40,21 +40,19 @@ public class Beehive : MonoBehaviour, IComparable
         }
         
         float outFlow = recipe.GetRequiredPollenCounts().GetValueOrDefault(pollen) * productionRate;
-        Debug.Log($"{pollen} inflow: {inFlow} outflow: {outFlow} productionRate: {productionRate}");
         
-        if(inFlow >= outFlow) {
+        if(inFlow + 1e-6 >= outFlow) {
             return 0;
         }
         
         float stock = inventory.GetValueOrDefault(pollen);
+        float surplus = Mathf.Pow(0.9f, stock / (outFlow - inFlow));
         
-        int surplus = Mathf.FloorToInt(stock / (outFlow - inFlow));
-        float surplusMod = Mathf.Pow(0.9f, surplus);
-        
-        float pollenRatio = recipe.GetRequiredPollenCounts()[pollen] / recipe.GetRequiredPollenCounts().Values.Sum();
+        float pollenRatio = (float)recipe.GetRequiredPollenCounts()[pollen] / recipe.GetRequiredPollenCounts().Values.Sum();
         float baseValue = recipe.currentPrice * pollenRatio;
         
-        return surplusMod * baseValue;
+        Debug.Log($"{name} {pollen} inflow: {inFlow} outflow: {outFlow} stock: {stock} surplus: {surplus} value: {surplus * baseValue}");
+        return surplus * baseValue;
     }
 
     public int CompareTo(object obj)
