@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     private List<Beehive> beehives = new();
     
     public Tilemap tilemap;
+
+    private int framesSinceLastTick;
+    private static int TICK_RATE = 50; 
     
     private float honey = 0;
     
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviour
         {
             throw new UnityException("GameManager instance already exists.");
         }
-        
+        Instance = this; 
         tilemap.ClearAllTiles();
         map = new Flower[mapSize.x][];
         for(var i = 0; i < mapSize.x; i++)
@@ -50,6 +53,23 @@ public class GameManager : MonoBehaviour
 
         CreateBeehive(new Vector2Int(2, 3), recipes[0]);
         CreateBeehive(new Vector2Int(4, 7), recipes[0]);
+    }
+
+    void FixedUpdate() {
+        framesSinceLastTick++;
+        if (framesSinceLastTick < TICK_RATE) {
+            return;
+        }
+        framesSinceLastTick = 0;
+
+        foreach (var beehive in beehives) {
+            beehive.CollectPollen();
+        }
+        TradingTick();
+        foreach(var beehive in beehives) {
+            beehive.CreateHoney();
+        }
+        Debug.Log("TICK");
     }
     
     public Flower[] GetFlowers(Vector2Int location, int radius) {

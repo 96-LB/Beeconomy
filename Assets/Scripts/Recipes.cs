@@ -5,7 +5,9 @@ using UnityEngine;
 [Serializable]
 public class Recipe {
     public HoneyType honeyType;
-    public Dictionary<Pollen, int> requiredPollenCounts;
+    public readonly Dictionary<Pollen, int> requiredPollenCounts = new() {
+        { Pollen.Wildflower, 1 }
+    };
     public Vector2Int priceBounds;
     public int currentPrice;
     public bool unlocked = false;
