@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Recipe {
-    public readonly HoneyType honeyType;
-    public readonly Dictionary<Pollen, int> requiredPollenCounts;
-    public readonly Vector2Int priceBounds;
+    public HoneyType honeyType;
+    public Dictionary<Pollen, int> requiredPollenCounts;
+    public Vector2Int priceBounds;
     public int currentPrice;
     public bool unlocked = false;
 
@@ -30,7 +32,7 @@ public class Recipe {
     }
 
     public void UpdatePrice() {
-        int randomPrice = Random.Range(priceBounds.x, priceBounds.y);
+        int randomPrice = UnityEngine.Random.Range(priceBounds.x, priceBounds.y);
         currentPrice += Mathf.RoundToInt((randomPrice - currentPrice) * priceSensitivity);
     }
 }
