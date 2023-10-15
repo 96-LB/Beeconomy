@@ -97,6 +97,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61f00b3f864bc4ce081821672f4c1ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pollenCollectionRate: 1
+  honey: 0
+  recipe:
+    honeyType: 0
+    priceBounds: {x: 0, y: 0}
+    currentPrice: 0
+    unlocked: 0
   collectionRadius: 2
+  collectionRate: 1
+  productionRate: 50
   position: {x: 0, y: 0}

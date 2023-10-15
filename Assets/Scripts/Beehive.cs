@@ -10,7 +10,7 @@ public class Beehive : MonoBehaviour, IComparable
     public readonly Dictionary<Pollen, float> inventory = new();
     public int collectionRadius = 2;
     public float collectionRate = 1;
-    public float productionRate = 1;
+    public int productionRate = 50;
     public Vector2Int position;
     private GameManager game;
 
@@ -26,7 +26,7 @@ public class Beehive : MonoBehaviour, IComparable
     }
     
     public void CreateHoney() {
-        int producedHoney = recipe.CalcHoneyProduced(inventory);
+        int producedHoney = Mathf.Min(productionRate, recipe.CalcHoneyProduced(inventory));
         honey += producedHoney;
         recipe.ConsumePollen(inventory, producedHoney);
     }
@@ -39,7 +39,8 @@ public class Beehive : MonoBehaviour, IComparable
             }
         }
         
-        float outFlow = recipe.requiredPollenCounts.GetValueOrDefault(pollen) * productionRate;
+        float outFlow = recipe.GetRequiredPollenCounts().GetValueOrDefault(pollen) * productionRate;
+        Debug.Log($"{pollen} inflow: {inFlow} outflow: {outFlow} productionRate: {productionRate}");
         
         if(inFlow >= outFlow) {
             return 0;
@@ -50,7 +51,7 @@ public class Beehive : MonoBehaviour, IComparable
         int surplus = Mathf.FloorToInt(stock / (outFlow - inFlow));
         float surplusMod = Mathf.Pow(0.9f, surplus);
         
-        float pollenRatio = recipe.requiredPollenCounts[pollen] / recipe.requiredPollenCounts.Values.Sum();
+        float pollenRatio = recipe.GetRequiredPollenCounts()[pollen] / recipe.GetRequiredPollenCounts().Values.Sum();
         float baseValue = recipe.currentPrice * pollenRatio;
         
         return surplusMod * baseValue;
