@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     
     public Vector2Int mapSize;
     
+    public Recipe[] recipes;
+
     public Flower[] flowers;
 
     private Flower[][] map;
