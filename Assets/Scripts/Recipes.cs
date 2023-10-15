@@ -9,17 +9,17 @@ public class Recipe {
 
     private static readonly float priceSensitivity = 0.25f;
 
-    public int CalcHoneyProduced(Dictionary<Pollen, int> pollenCounts) {
-        int honey = int.MaxValue;
+    public int CalcHoneyProduced(Dictionary<Pollen, float> pollenCounts) {
+        float honey = float.PositiveInfinity;
         foreach (var recipeItem in requiredPollenCounts) {
             if (pollenCounts.ContainsKey(recipeItem.Key)) {
                 honey = Mathf.Min(honey, pollenCounts[recipeItem.Key] / recipeItem.Value);
             }
         }
-        return honey == int.MaxValue ? 0 : honey;
+        return Mathf.FloorToInt(honey);
     }
 
-    public void ConsumePollen(Dictionary<Pollen, int> pollenCount, int honey) {
+    public void ConsumePollen(Dictionary<Pollen, float> pollenCount, int honey) {
         foreach (var flowerType in pollenCount.Keys) {
             pollenCount[flowerType] -= honey * requiredPollenCounts[flowerType];
             if (pollenCount[flowerType] < 0) {
