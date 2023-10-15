@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     private List<Beehive> beehives = new();
     
     public Tilemap tilemap;
+    
+    public Beehive selectedBeehive;
 
     private int framesSinceLastTick;
     private static int TICK_RATE = 250; 

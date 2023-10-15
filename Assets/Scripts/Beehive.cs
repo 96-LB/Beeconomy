@@ -17,6 +17,10 @@ public class Beehive : MonoBehaviour, IComparable
     void Start() {
         game = GameManager.Instance;
     }
+
+    void OnMouseDown() {
+        game.selectedBeehive = this;
+    }
     
     public void CollectPollen() {
         foreach(var flower in game.GetFlowers(position, collectionRadius)) {
