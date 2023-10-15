@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class Beehive : MonoBehaviour, IComparable
 {
-    public float honey;
+    public float honey = 0;
     public Recipe recipe;
-    public readonly Dictionary<HoneyType, int> honeyCounts = new();
     public readonly Dictionary<Pollen, float> inventory = new();
     public int collectionRadius = 2;
     public float collectionRate = 1;
@@ -28,8 +27,7 @@ public class Beehive : MonoBehaviour, IComparable
     
     public void CreateHoney() {
         int producedHoney = recipe.CalcHoneyProduced(inventory);
-        honeyCounts.TryAdd(recipe.honeyType, 0);
-        honeyCounts[recipe.honeyType] += producedHoney;
+        honey += producedHoney;
         recipe.ConsumePollen(inventory, producedHoney);
     }
 

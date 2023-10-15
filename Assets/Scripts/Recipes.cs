@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -25,8 +26,11 @@ public class Recipe {
     }
 
     public void ConsumePollen(Dictionary<Pollen, float> pollenCount, int honey) {
-        foreach (var flowerType in pollenCount.Keys) {
-            pollenCount[flowerType] -= honey * requiredPollenCounts[flowerType];
+        foreach (var flowerType in pollenCount.Keys.ToList()) {
+            if (!pollenCount.ContainsKey(flowerType)) {
+                continue;
+            }
+            pollenCount[flowerType] -= honey * requiredPollenCounts.GetValueOrDefault(flowerType);
             if (pollenCount[flowerType] < 0) {
                 Debug.LogErrorFormat("Pollen count of {0} should not be less than 0!", flowerType);
             }

@@ -75,8 +75,8 @@ public class GameManager : MonoBehaviour
     public Flower[] GetFlowers(Vector2Int location, int radius) {
         var ret = new List<Flower>();
         
-        for(int i = location.y - radius; i < location.y + radius; i++) {
-            for(int j = location.x - radius; j < location.x + radius; j++) {
+        for(int i = location.x - radius; i < location.x + radius; i++) {
+            for(int j = location.y - radius; j < location.y + radius; j++) {
                 if(i < 0 || i >= map.Length || j < 0 || j >= map[i].Length) {
                     continue;
                 }
@@ -151,5 +151,4 @@ public class GameManager : MonoBehaviour
             (beehives[n], beehives[k]) = (beehives[k], beehives[n]);
         }
     }
-    
 }
