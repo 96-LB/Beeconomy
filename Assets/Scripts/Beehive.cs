@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Beehive : MonoBehaviour
+public class Beehive : MonoBehaviour, IComparable
 {
     public float honey;
     public Recipe recipe;
@@ -41,7 +41,7 @@ public class Beehive : MonoBehaviour
             }
         }
         
-        float outFlow = recipe.requiredPollenCounts[pollen] * productionRate;
+        float outFlow = recipe.requiredPollenCounts.GetValueOrDefault(pollen) * productionRate;
         
         if(inFlow >= outFlow) {
             return 0;
@@ -56,5 +56,10 @@ public class Beehive : MonoBehaviour
         float baseValue = recipe.currentPrice * pollenRatio;
         
         return surplusMod * baseValue;
+    }
+
+    public int CompareTo(object obj)
+    {
+        return 0;
     }
 }
