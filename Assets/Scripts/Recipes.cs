@@ -6,6 +6,7 @@ public class Recipe {
     public readonly Dictionary<Pollen, int> requiredPollenCounts;
     public readonly Vector2Int priceBounds;
     public int currentPrice;
+    public bool unlocked = false;
 
     private static readonly float priceSensitivity = 0.25f;
 
