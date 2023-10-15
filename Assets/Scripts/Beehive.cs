@@ -6,7 +6,7 @@ public class Beehive : MonoBehaviour
 {
     public Recipe recipe;
     public Dictionary<HoneyType, int> honeyCounts;
-    public Dictionary<FlowerType, int> pollenCounts;
+    public Dictionary<Pollen, int> pollenCounts;
     public int pollenCollectionRate = 0;
     public int collectionRadius = 2;
     public int xPos;
@@ -25,7 +25,7 @@ public class Beehive : MonoBehaviour
     }
 
     public void CollectPollen() {
-        Dictionary<FlowerType, int> flowerCounts = GetFlowersInCollectionRadius();
+        Dictionary<Pollen, int> flowerCounts = GetFlowersInCollectionRadius();
         foreach (var flowerType in flowerCounts.Keys) {
             pollenCounts.TryAdd(flowerType, 0);
             pollenCounts[flowerType] += flowerCounts[flowerType] * pollenCollectionRate;
@@ -39,16 +39,16 @@ public class Beehive : MonoBehaviour
         recipe.ConsumePollen(pollenCounts, producedHoney);
     }
 
-    private Dictionary<FlowerType, int> GetFlowersInCollectionRadius() {
-        var flowerCounts = new Dictionary<FlowerType, int>();
+    private Dictionary<Pollen, int> GetFlowersInCollectionRadius() {
+        var flowerCounts = new Dictionary<Pollen, int>();
         for (int i = 0; i < GameManager.flowerGrid.Length; i++) {
             for (int j = 0; j < GameManager.flowerGrid[i].Length; j++) {
-                if (GameManager.flowerGrid[i][j] == FlowerType.Empty) {
+                if (GameManager.flowerGrid[i][j] == Pollen.Empty) {
                     continue;
                 }
                 int distSquared = Math.Max(Math.Abs(xPos-i), Math.Abs(yPos-j));
                 if (distSquared <= collectionRadius*collectionRadius) {
-                    FlowerType flowerType = GameManager.flowerGrid[i][j];
+                    Pollen flowerType = GameManager.flowerGrid[i][j];
                     flowerCounts.TryAdd(flowerType, 0);
                     flowerCounts[flowerType] += 1;
                 }
