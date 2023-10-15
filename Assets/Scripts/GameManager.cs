@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using System.Numerics;
+using System.ComponentModel;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -17,9 +19,11 @@ public class GameManager : MonoBehaviour
 
     private Flower[][] map;
     
-    private Dictionary<Beehive, Vector2Int> beehives = new();
+    private List<Beehive> beehives = new();
     
     public Tilemap tilemap;
+    
+    private float honey = 0;
     
     void Start()
     {
@@ -72,7 +76,7 @@ public class GameManager : MonoBehaviour
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
         beehive.recipe = startingRecipe;
-        beehives.Add(beehive, position);
+        beehives.Add(beehive);
     }
 
     public Vector2Int GamePosToWorldPos(Vector2Int gamePos) {
@@ -82,4 +86,50 @@ public class GameManager : MonoBehaviour
     public Vector2Int WorldPosToGamePos(Vector2Int worldPos) {
         return new Vector2Int(worldPos.x + mapSize.x / 2, worldPos.y + mapSize.y / 2);
     }
+    
+    public void TradingTick() {
+        var more = true;
+        while(more) {
+            more = false;
+            foreach(Pollen pollen in System.Enum.GetValues(typeof(Pollen))) {
+                more |= TradePollen(pollen);
+            }
+        }
+    }
+    
+    private bool TradePollen(Pollen pollen) {
+        ShuffleHives();
+        var buyer = beehives.Select(hive => (
+            bid: Mathf.Min(hive.honey, hive.Value(pollen)),
+            hive
+        )).Max();
+        ShuffleHives();
+        
+        foreach(Beehive seller in beehives) {
+            const int TAX = 1;
+            if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
+            if(seller.Value(pollen) + TAX >= buyer.bid) continue;
+            
+            seller.honey += buyer.bid - TAX;
+            buyer.hive.honey -= buyer.bid;
+            honey += TAX;
+            
+            seller.inventory[pollen]--;
+            buyer.hive.inventory.TryAdd(pollen, 0);
+            buyer.hive.inventory[pollen]++;
+            
+            return true;
+        }
+        return false;
+    }
+    
+    private void ShuffleHives() {
+        int n = beehives.Count;
+        while (n > 1) {
+            n--;
+            int k = Random.Range(0, n + 1);
+            (beehives[n], beehives[k]) = (beehives[k], beehives[n]);
+        }
+    }
+    
 }
