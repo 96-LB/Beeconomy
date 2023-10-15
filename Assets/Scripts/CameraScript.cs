@@ -4,6 +4,8 @@ public class CameraScript : InputBehaviour
 {
     
     public const float cameraSpeed = 0.25f;
+    public Vector2 bounds = new(8,6);
+    
     
     void Start()
     {
@@ -31,7 +33,11 @@ public class CameraScript : InputBehaviour
         {
             transform.position += Vector3.right * cameraSpeed;
         }
-        
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, -bounds.x, bounds.x),
+            Mathf.Clamp(transform.position.y, -bounds.y, bounds.y),
+            transform.position.z
+        );
         base.FixedUpdate();
     }
 }
