@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public Tilemap tilemap;
 
     private int framesSinceLastTick;
-    private static int TICK_RATE = 50; 
+    private static int TICK_RATE = 250; 
     
     private float honey = 0;
     
@@ -51,8 +51,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        CreateBeehive(new Vector2Int(2, 3), recipes[0]);
-        CreateBeehive(new Vector2Int(4, 7), recipes[0]);
+        CreateBeehive(new Vector2Int(2, 3), recipes[0], "Beehive 1");
+        CreateBeehive(new Vector2Int(4, 7), recipes[0], "Beehive 2");
     }
 
     void FixedUpdate() {
@@ -89,14 +89,23 @@ public class GameManager : MonoBehaviour
         return ret.ToArray();
     }
 
-    public void CreateBeehive(Vector2Int position, Recipe startingRecipe) {
+    public void CreateBeehive(Vector2Int position, Recipe startingRecipe, string name) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
+        beehiveObj.name = name;
         Vector2Int worldPos = GamePosToWorldPos(position);
         beehiveObj.transform.position = new Vector3Int(worldPos.x, worldPos.y, 0);
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
         beehive.recipe = startingRecipe;
         beehives.Add(beehive);
+    }
+    
+    public void UnlockRecipe(HoneyType honeyType) {
+        for (int i = 0; i < recipes.Length; i++) {
+            if (recipes[i].honeyType == honeyType) {
+                recipes[i].unlocked = true;
+            }
+        }
     }
 
     public Vector2Int GamePosToWorldPos(Vector2Int gamePos) {
@@ -124,11 +133,15 @@ public class GameManager : MonoBehaviour
             hive
         )).Max();
         ShuffleHives();
+        Debug.Log($"{buyer.hive.name} wants to buy {pollen} for {buyer.bid} {buyer.hive.Value(pollen)}");
         
         foreach(Beehive seller in beehives) {
             const int TAX = 1;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
+            Debug.Log($"{seller.name} wants to sell {pollen} for {seller.Value(pollen) + TAX}");
             if(seller.Value(pollen) + TAX >= buyer.bid) continue;
+
+            Debug.Log($"{buyer.hive.name} bought {pollen} from {seller.name} for {buyer.bid}");
             
             seller.honey += buyer.bid - TAX;
             buyer.hive.honey -= buyer.bid;

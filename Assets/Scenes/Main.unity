@@ -1399,7 +1399,7 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 79d089a962450b84bb8df3d440275a89, type: 2}
   - name: Wildflower
     pollen: 2
-    amount: 999
+    amount: 5
     tile: {fileID: 11400000, guid: 24fb99436e050444c82dbe51eeff16fb, type: 2}
   tilemap: {fileID: 965249604}
 --- !u!1 &612740138
