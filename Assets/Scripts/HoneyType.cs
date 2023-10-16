@@ -1,3 +1,4 @@
 public enum HoneyType {
-    Basic
+    Golden,
+    OrangeBlossom
 };
