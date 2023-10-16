@@ -13,7 +13,7 @@ public class TilemapScript : MonoBehaviour
             if (GameManager.Instance.addingBeehiveMode) {
                 var worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 var gamePos = GameManager.Instance.WorldPosToGamePos(new Vector2Int((int)worldPos.x, (int)worldPos.y));
-                GameManager.Instance.CreateBeehive(new Vector2Int(gamePos.x, gamePos.y), GameManager.Instance.recipes[0], "added beehive");
+                GameManager.Instance.CreateBeehive(new Vector2Int(gamePos.x, gamePos.y));
                 GameManager.Instance.addingBeehiveMode = false;
                 var ghostBeehive = GameManager.Instance.ghostBeehive;
                 var color = ghostBeehive.GetComponent<SpriteRenderer>().color;

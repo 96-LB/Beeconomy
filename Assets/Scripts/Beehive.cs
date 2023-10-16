@@ -10,7 +10,7 @@ public class Beehive : MonoBehaviour, IComparable
     public readonly Dictionary<Pollen, float> inventory = new();
     public int collectionRadius = 2;
     public float collectionRate = 1;
-    public int productionRate = 50;
+    public int productionRate = 1;
     public Vector2Int position;
     private GameManager game;
 
@@ -56,7 +56,6 @@ public class Beehive : MonoBehaviour, IComparable
         float pollenRatio = (float)recipe.GetRequiredPollenCounts()[pollen] / recipe.GetRequiredPollenCounts().Values.Sum();
         float baseValue = recipe.currentPrice * pollenRatio;
         
-        Debug.Log($"{name} {pollen} inflow: {inFlow} outflow: {outFlow} stock: {stock} surplus: {surplus} value: {surplus * baseValue}");
         return surplus * baseValue;
     }
 

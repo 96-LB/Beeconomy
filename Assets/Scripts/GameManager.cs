@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public GameObject ghostBeehive;
 
     private int framesSinceLastTick;
-    private static int TICK_RATE = 250;
+    private const int TICK_RATE = 50;
     
     private float honey = 0;
     
@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        CreateBeehive(new Vector2Int(2, 3), recipes[0], "Beehive 1");
-        CreateBeehive(new Vector2Int(4, 7), recipes[0], "Beehive 2");
+        CreateBeehive(new Vector2Int(2, 3));
+        CreateBeehive(new Vector2Int(4, 7));
     }
     
     void Update() {
@@ -99,14 +99,13 @@ public class GameManager : MonoBehaviour
         return ret.ToArray();
     }
 
-    public void CreateBeehive(Vector2Int position, Recipe startingRecipe, string name) {
+    public void CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
-        beehiveObj.name = name;
         Vector2Int worldPos = GamePosToWorldPos(position);
         beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
-        beehive.recipe = startingRecipe;
+        beehive.recipe = recipes[0];
         beehives.Add(beehive);
     }
 
@@ -135,15 +134,12 @@ public class GameManager : MonoBehaviour
             hive
         )).Max();
         ShuffleHives();
-        Debug.Log($"{buyer.hive.name} wants to buy {pollen} for {buyer.bid}");
         
         foreach(Beehive seller in beehives) {
             const float TAX = 0.99f;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
-            Debug.Log($"{seller.name} wants to sell {pollen} for {seller.Value(pollen) + TAX}");
             if(seller.Value(pollen) + TAX >= buyer.bid) continue;
 
-            Debug.Log($"{buyer.hive.name} bought {pollen} from {seller.name} for {buyer.bid}");
             
             seller.honey += buyer.bid - TAX;
             buyer.hive.honey -= buyer.bid;
