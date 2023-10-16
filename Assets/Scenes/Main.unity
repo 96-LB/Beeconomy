@@ -2201,9 +2201,9 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 241bc0620aac0df468c07b1e11e4a959, type: 2}
   tilemap: {fileID: 965249604}
   selectedBeehive: {fileID: 0}
-  addingBeehiveMode: 0
+  addHiveMode: 0
   ghostBeehive: {fileID: 647253738}
-  newBeehiveButton: {fileID: 1509206494}
+  newBeehiveButton: {fileID: 1509206496}
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3874,7 +3874,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3885,7 +3885,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 40, y: 40}
+  m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
 --- !u!1 &1005502052
 GameObject:
@@ -5653,7 +5653,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 519420034}
           m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-          m_MethodName: EnterAddHiveMode
+          m_MethodName: ToggleHiveMode
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
