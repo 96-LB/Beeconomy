@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     public Beehive CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
         Vector2 worldPos = GamePosToWorldPos(position);
-        beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
+        beehiveObj.transform.position = worldPos;
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
         beehive.recipe = recipes[0];
@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour
     
     public void SendBee(Vector2Int startPos, Sprite load, params Vector2Int[] path) {
         var pos = GamePosToWorldPos(startPos);
-        GameObject obj = Instantiate(beeObj, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
+        GameObject obj = Instantiate(beeObj, pos, Quaternion.identity);
         Bee bee = obj.GetComponent<Bee>();
         foreach(Vector2Int pathPos in path) {
             bee.path.Add(GamePosToWorldPos(pathPos));

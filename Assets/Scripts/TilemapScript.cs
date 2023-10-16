@@ -29,6 +29,6 @@ public class TilemapScript : MonoBehaviour
 
     void Update() {
         var pos = game.GamePosToWorldPos(GetMousePos());
-        game.ghostBeehive.transform.position = new Vector3(pos.x, pos.y, -4);
+        game.ghostBeehive.transform.position = pos;
     }
 }
