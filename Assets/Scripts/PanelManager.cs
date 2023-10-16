@@ -1,6 +1,7 @@
 using System.Linq;
 using TMPro;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class PanelManager : MonoBehaviour
     public TextMeshProUGUI recipeInfoTitleText;
     public GameObject[] recipeImages;
     public GameObject[] recipeInfoPollenImages;
+    public TextMeshProUGUI priceText;
     public TextMeshProUGUI honeyText;
     public GameObject[] inventoryImages;
 
@@ -31,17 +33,14 @@ public class PanelManager : MonoBehaviour
                 var recipe = game.recipes[i];
                 recipeImage.GetComponent<Image>().sprite = recipe.sprite;
                 recipeImage.AddComponent<RecipeInfoButton>().recipe = recipe;
-                
             }
             else
             {
                 recipeImage.SetActive(false);
             }
         }
-        
     }
-
-    // Update is called once per frame
+    
     void FixedUpdate()
     {
         panel.localScale = new Vector3(Mathf.Lerp(panel.localScale.x, x, 0.2f), 1, 1);
@@ -75,6 +74,7 @@ public class PanelManager : MonoBehaviour
     {
         if (recipe != null) {
             recipeInfoTitleText.text = recipe.name;
+            priceText.text = $"ħ{recipe.currentPrice} per unit";
             var requiredPollenCounts = recipe.GetRequiredPollenCounts();
             var pollenList = requiredPollenCounts.Keys.ToList();
             for (int i = 0; i < recipeInfoPollenImages.Length; i++) {
