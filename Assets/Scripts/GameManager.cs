@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -24,6 +25,9 @@ public class GameManager : MonoBehaviour
     public Tilemap tilemap;
     
     public Beehive selectedBeehive;
+
+    public bool addingBeehiveMode = false;
+    public GameObject ghostBeehive;
 
     private int framesSinceLastTick;
     private static int TICK_RATE = 250;
@@ -161,5 +165,11 @@ public class GameManager : MonoBehaviour
             int k = Random.Range(0, n + 1);
             (beehives[n], beehives[k]) = (beehives[k], beehives[n]);
         }
+    }
+
+    public void EnterAddHiveMode() {
+        addingBeehiveMode = true;
+        var color = ghostBeehive.GetComponent<SpriteRenderer>().color;
+        ghostBeehive.GetComponent<SpriteRenderer>().color = color.WithAlpha(0.5f);
     }
 }
