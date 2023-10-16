@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     }
     
     void Update() {
-        honeyText.text = $" ħ{honey}";
+        honeyText.text = $" ħ{honey:F2}";
     }
     
     void FixedUpdate() {
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         foreach(var beehive in beehives) {
             beehive.CreateHoney();
         }
-        Debug.Log("TICK");
+        PanelManager.Instance.Tick();
     }
     
     public Flower[] GetFlowers(Vector2Int location, int radius) {
