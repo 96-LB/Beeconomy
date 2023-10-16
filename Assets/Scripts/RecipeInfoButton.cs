@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RecipeInfoButton : MonoBehaviour
 {
-    public HoneyType recipe;
+    public Recipe recipe;
     private PanelManager panelManager;
     
     // Start is called before the first frame update
     void Start()
     {
-        panelManager = PanelManager.Instance;     
+        panelManager = PanelManager.Instance;
+        gameObject.AddComponent<EventTrigger>().triggers.Add(new EventTrigger.Entry() {
+            eventID = EventTriggerType.PointerClick,
+            callback = new EventTrigger.TriggerEvent(),
+        });
+        gameObject.GetComponent<EventTrigger>().triggers[0].callback.AddListener((data) => {MouseClicked();});
     }
 
     // Update is called once per frame
@@ -21,6 +27,6 @@ public class RecipeInfoButton : MonoBehaviour
 
     public void MouseClicked() {
         Debug.Log("clicked");
-        PanelManager.Instance.selectedRecipe = recipe;    
+        PanelManager.Instance.SelectRecipe(recipe);
     }
 }
