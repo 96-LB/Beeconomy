@@ -169,7 +169,7 @@ public class GameManager : MonoBehaviour
         ShuffleHives();
         
         foreach(Beehive seller in beehives) {
-            const float TAX = 0.99f;
+            const float TAX = 0.09f;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
             if(seller.Value(pollen) + TAX >= buyer.bid) continue;
 
