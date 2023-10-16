@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,13 +27,14 @@ public class GameManager : MonoBehaviour
     
     public Beehive selectedBeehive;
 
-    public bool addingBeehiveMode = false;
+    public bool addHiveMode = false;
     public GameObject ghostBeehive;
 
     private int framesSinceLastTick;
     private const int TICK_RATE = 50;
-    
-    private float honey = 0;
+    private const int BEEHIVE_COST = 100;
+    private float honey = BEEHIVE_COST * 2;
+    public Image newBeehiveButton;
     
     void Start()
     {
@@ -59,6 +62,13 @@ public class GameManager : MonoBehaviour
     
     void Update() {
         honeyText.text = $" ħ{honey:F2}";
+        if(addHiveMode) {
+            newBeehiveButton.color = Color.green;
+        } else if(honey < BEEHIVE_COST) {
+            newBeehiveButton.color = Color.red;
+        } else {
+            newBeehiveButton.color = Color.white;
+        }
     }
     
     void FixedUpdate() {
@@ -104,8 +114,9 @@ public class GameManager : MonoBehaviour
         beehive.recipe = recipes[0];
         beehives.Add(beehive);
         SelectBeehive(beehive);
-        addingBeehiveMode = false;
-        ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+        addHiveMode = false;
+        ghostBeehive.GetComponent<SpriteRenderer>().color = Color.clear;
+        honey -= BEEHIVE_COST;
         return beehive;
     }
     
@@ -186,8 +197,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterAddHiveMode() {
-        ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
-        addingBeehiveMode = true;
+    public void ToggleHiveMode() {
+        if(addHiveMode)
+        {
+            addHiveMode = false;
+            ghostBeehive.GetComponent<SpriteRenderer>().color = Color.clear;
+        }
+        else if(honey >= BEEHIVE_COST)
+        {
+            addHiveMode = true;
+            ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+        }
     }
 }

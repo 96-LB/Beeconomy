@@ -3,11 +3,9 @@ using UnityEngine;
 public class TilemapScript : MonoBehaviour
 {
     private GameManager game;
-    private PanelManager panelManager;
     void Start()
     {
         game = GameManager.Instance;
-        panelManager = PanelManager.Instance;
     }
     
     Vector2Int GetMousePos() {
@@ -17,13 +15,15 @@ public class TilemapScript : MonoBehaviour
     }
     
     void OnMouseDown(){
-        if(Input.mousePosition.x < Screen.width - 200)
-        {
-            game.SelectBeehive(null);
-        }
-        if (game.addingBeehiveMode) {
+        if (game.addHiveMode) {
+            if(Input.mousePosition.x < 100 && Input.mousePosition.y < 100) {
+                game.ToggleHiveMode(); // actually disables it
+            }
             var pos = GetMousePos();
             game.CreateBeehive(pos);
+        } else if(Input.mousePosition.x < Screen.width - 200)
+        {
+            game.SelectBeehive(null);
         }
     }
 
