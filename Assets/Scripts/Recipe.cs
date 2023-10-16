@@ -4,7 +4,8 @@ using UnityEngine;
 
 [System.Serializable]
 public class Recipe {
-    public HoneyType honeyType;
+    public string name;
+    public Sprite sprite;
     public List<Pollen> requiredPollen;
     public Vector2Int priceBounds;
     public int currentPrice;

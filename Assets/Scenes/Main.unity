@@ -2012,6 +2012,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2122,8 +2123,21 @@ MonoBehaviour:
   honeyText: {fileID: 66209730}
   mapSize: {x: 16, y: 16}
   recipes:
-  - honeyType: 0
+  - name: Basic
+    sprite: {fileID: 21300000, guid: 6bf0169d6a0e5a0498f595499e67a1ea, type: 3}
     requiredPollen: 000000000000000001000000
+    priceBounds: {x: 5, y: 15}
+    currentPrice: 10
+    unlocked: 1
+  - name: Orange
+    sprite: {fileID: 21300000, guid: 83b31b18bb7577b42a2a01b4f8394c05, type: 3}
+    requiredPollen: 02000000
+    priceBounds: {x: 5, y: 15}
+    currentPrice: 10
+    unlocked: 1
+  - name: Rainbow
+    sprite: {fileID: 21300000, guid: c2498284e2704aa40b700bf3d9b24d37, type: 3}
+    requiredPollen: 010000000100000001000000
     priceBounds: {x: 5, y: 15}
     currentPrice: 10
     unlocked: 1
@@ -2131,12 +2145,50 @@ MonoBehaviour:
   - name: Clover
     pollen: 0
     amount: 1
-    tile: {fileID: 11400000, guid: 79d089a962450b84bb8df3d440275a89, type: 2}
+    tile: {fileID: 11400000, guid: ff90d210a2c9f5548858163e31a14f77, type: 2}
   - name: Wildflower
     pollen: 1
-    amount: 5
-    tile: {fileID: 11400000, guid: 24fb99436e050444c82dbe51eeff16fb, type: 2}
+    amount: 1
+    tile: {fileID: 11400000, guid: 41e846810349fb84eac1aa04e883ec24, type: 2}
+  - name: Orange Blossom
+    pollen: 2
+    amount: 1
+    tile: {fileID: 11400000, guid: c089f38f0c6b34449bab5de8813a5c33, type: 2}
   tilemap: {fileID: 965249604}
+  selectedBeehive: {fileID: 0}
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac9e7601ffbd94a2e9434f3cbd0c1364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 66324196}
+  recipeInfoTitleText: {fileID: 1544575068}
+  recipeImages:
+  - {fileID: 186193828}
+  - {fileID: 1338431496}
+  - {fileID: 784578260}
+  - {fileID: 657373927}
+  - {fileID: 2083980697}
+  - {fileID: 123520795}
+  - {fileID: 612740138}
+  - {fileID: 1792418442}
+  - {fileID: 1933646379}
+  - {fileID: 517453236}
+  - {fileID: 1005502052}
+  - {fileID: 1342775521}
+  recipeInfoPollenImages:
+  - {fileID: 255917324}
+  - {fileID: 885185871}
+  - {fileID: 827025578}
+  - {fileID: 1415670652}
+  - {fileID: 2099127967}
 --- !u!1 &580810686
 GameObject:
   m_ObjectHideFlags: 0
@@ -3305,7 +3357,6 @@ GameObject:
   - component: {fileID: 965249602}
   - component: {fileID: 965249604}
   - component: {fileID: 965249603}
-  - component: {fileID: 965249605}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -3733,18 +3784,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &965249605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965249601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e45ff589061c4474493d74ceb09bae99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &980642656
 GameObject:
   m_ObjectHideFlags: 0

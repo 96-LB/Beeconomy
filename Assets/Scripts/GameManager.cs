@@ -99,19 +99,11 @@ public class GameManager : MonoBehaviour
         GameObject beehiveObj = Instantiate(beehivePrefab);
         beehiveObj.name = name;
         Vector2Int worldPos = GamePosToWorldPos(position);
-        beehiveObj.transform.position = new Vector3Int(worldPos.x, worldPos.y, 0);
+        beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
         beehive.recipe = startingRecipe;
         beehives.Add(beehive);
-    }
-    
-    public void UnlockRecipe(HoneyType honeyType) {
-        for (int i = 0; i < recipes.Length; i++) {
-            if (recipes[i].honeyType == honeyType) {
-                recipes[i].unlocked = true;
-            }
-        }
     }
 
     public Vector2Int GamePosToWorldPos(Vector2Int gamePos) {
