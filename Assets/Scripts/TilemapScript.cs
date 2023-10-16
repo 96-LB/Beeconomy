@@ -19,20 +19,16 @@ public class TilemapScript : MonoBehaviour
     void OnMouseDown(){
         if(Input.mousePosition.x < Screen.width - 200)
         {
-            game.selectedBeehive = null;
-            panelManager.SelectRecipe(null);
-
-            if (game.addingBeehiveMode) {
-                var pos = GetMousePos();
-                game.CreateBeehive(pos);
-                game.addingBeehiveMode = false;
-                game.ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
-            }
+            game.SelectBeehive(null);
+        }
+        if (game.addingBeehiveMode) {
+            var pos = GetMousePos();
+            game.CreateBeehive(pos);
         }
     }
 
     void Update() {
-        var pos= game.GamePosToWorldPos(GetMousePos());
+        var pos = game.GamePosToWorldPos(GetMousePos());
         game.ghostBeehive.transform.position = new Vector3(pos.x, pos.y, -4);
     }
 }

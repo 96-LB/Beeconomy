@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         return ret.ToArray();
     }
 
-    public void CreateBeehive(Vector2Int position) {
+    public Beehive CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
         Vector2 worldPos = GamePosToWorldPos(position);
         beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
@@ -103,8 +103,28 @@ public class GameManager : MonoBehaviour
         beehive.position = position;
         beehive.recipe = recipes[0];
         beehives.Add(beehive);
+        SelectBeehive(beehive);
+        addingBeehiveMode = false;
+        ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+        return beehive;
     }
-
+    
+    public void SelectBeehive(Beehive beehive) {
+        if(selectedBeehive) {
+            selectedBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        }
+        selectedBeehive = beehive;
+        if(beehive == null)
+        {
+            PanelManager.Instance.SelectRecipe(null);
+        }
+        else
+        {
+            beehive.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
+            PanelManager.Instance.SelectRecipe(selectedBeehive.recipe);
+        }
+    }
+    
     private Vector2Int GamePosToTilePos(Vector2Int gamePos) {
         return new Vector2Int(gamePos.x - mapSize.x / 2, gamePos.y - mapSize.y / 2);
     }

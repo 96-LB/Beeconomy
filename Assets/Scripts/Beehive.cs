@@ -19,8 +19,7 @@ public class Beehive : MonoBehaviour, IComparable
     }
 
     void OnMouseDown() {
-        game.selectedBeehive = this;
-        PanelManager.Instance.SelectRecipe(recipe);
+        game.SelectBeehive(this);
     }
     
     public void CollectPollen() {
