@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
     private float honey = BEEHIVE_COST * 2;
     public Image newBeehiveButton;
     public GameObject beeObj;
+    private float tax = 0.1f / 100;
+    public TextMeshProUGUI taxText;
+    public Slider slider;
     void Start()
     {
         if(Instance != null)
@@ -57,6 +60,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        SetTax();
     }
     
     void Update() {
@@ -90,7 +94,7 @@ public class GameManager : MonoBehaviour
                 var x = beehive.position.x + Random.Range(-beehive.collectionRadius, beehive.collectionRadius + 1);
                 var y = beehive.position.y + Random.Range(-beehive.collectionRadius, beehive.collectionRadius + 1);
                 Vector2Int pos = new(x, y);
-                if(0 <= x && x < map[0].Length  && 0 <= y && y < map.Length && pos != beehive.position && map[x][y] != null)
+                if(0 <= x && x < map.Length  && 0 <= y && y < map[0].Length && pos != beehive.position && map[x][y] != null)
                 {
                     path.Add(pos);
                 }
@@ -191,13 +195,12 @@ public class GameManager : MonoBehaviour
         ShuffleHives();
         
         foreach(Beehive seller in beehives) {
-            const float TAX = 0.09f;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
-            if(seller.Value(pollen) + TAX >= buyer.bid) continue;
+            if(seller.Value(pollen) + tax >= buyer.bid) continue;
 
-            seller.honey += buyer.bid - TAX;
+            seller.honey += buyer.bid - tax;
             buyer.hive.honey -= buyer.bid;
-            honey += TAX;
+            honey += tax;
             
             seller.inventory[pollen]--;
             buyer.hive.inventory.TryAdd(pollen, 0);
@@ -245,5 +248,10 @@ public class GameManager : MonoBehaviour
         bee.swaySpeed *= Random.Range(0.5f, 1.5f);
         bee.speed *= Random.Range(0.8f, 1.2f);
         bee.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = load;
+    }
+    
+    public void SetTax() {
+        tax = slider.value / 100f;
+        taxText.text = $"ħ{tax:F2}";
     }
 }
