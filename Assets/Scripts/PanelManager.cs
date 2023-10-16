@@ -1,7 +1,6 @@
+using System;
 using System.Linq;
 using TMPro;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,7 +49,17 @@ public class PanelManager : MonoBehaviour
     {
         if(!game.selectedBeehive)
             return;
+            
         honeyText.text = $" ħ{game.selectedBeehive.honey:F2}";
+        
+        Recipe recipe = game.selectedBeehive.recipe;
+        priceText.text = $"ħ{recipe.currentPrice:F2} per unit";
+            float avgPrice = (recipe.priceBounds.x + recipe.priceBounds.y) / 2f;
+            float bounds = recipe.priceBounds.y - recipe.priceBounds.x / 2f;
+            float t = Mathf.Pow(Math.Abs(recipe.currentPrice - avgPrice) / bounds, 0.5f);
+            Color c = recipe.currentPrice > avgPrice ? Color.green : Color.red;
+            priceText.color = Color.Lerp(Color.white, c, t);
+        
         var inventory = game.selectedBeehive.inventory;
         for(int i = 0; i < inventoryImages.Length; i++)
         {
@@ -74,7 +83,7 @@ public class PanelManager : MonoBehaviour
     {
         if (recipe != null) {
             recipeInfoTitleText.text = recipe.name;
-            priceText.text = $"ħ{recipe.currentPrice} per unit";
+            
             var requiredPollenCounts = recipe.GetRequiredPollenCounts();
             var pollenList = requiredPollenCounts.Keys.ToList();
             for (int i = 0; i < recipeInfoPollenImages.Length; i++) {

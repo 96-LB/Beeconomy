@@ -29,10 +29,13 @@ public class GameManager : MonoBehaviour
     public bool addHiveMode = false;
     public GameObject ghostBeehive;
 
-    private int framesSinceLastTick;
     private const int TICK_RATE = 50;
     private const int BEEHIVE_COST = 100;
+    private const int PRICE_RATE = 10;
     private float honey = BEEHIVE_COST * 2;
+    private int framesSinceLastTick;
+    private int ticksSinceLastPriceTick = PRICE_RATE;
+    
     public Image newBeehiveButton;
     public GameObject beeObj;
     private float tax = 0.1f / 100;
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         framesSinceLastTick = 0;
-
+        
         foreach (var beehive in beehives) {
             beehive.CollectPollen();
             
@@ -111,6 +114,16 @@ public class GameManager : MonoBehaviour
             beehive.CreateHoney();
         }
         PanelManager.Instance.Tick();
+        
+        ticksSinceLastPriceTick++;
+        if(ticksSinceLastPriceTick < PRICE_RATE) {
+            return;
+        }
+        ticksSinceLastPriceTick = 0;
+        
+        foreach(Recipe recipe in recipes) {
+            recipe.UpdatePrice();
+        }
     }
     
     public Flower[] GetFlowers(Vector2Int location, int radius) {

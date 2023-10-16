@@ -7,11 +7,10 @@ public class Recipe {
     public string name;
     public Sprite sprite;
     public List<Pollen> requiredPollen;
-    public Vector2Int priceBounds;
-    public int currentPrice;
+    public Vector2 priceBounds;
+    public float currentPrice;
     public bool unlocked = false;
-
-    private static readonly float priceSensitivity = 0.25f;
+    private static readonly float priceSensitivity = 0.5f;
 
     public int CalcHoneyProduced(Dictionary<Pollen, float> pollenCounts) {
         float honey = int.MaxValue;
@@ -34,8 +33,8 @@ public class Recipe {
     }
 
     public void UpdatePrice() {
-        int randomPrice = Random.Range(priceBounds.x, priceBounds.y);
-        currentPrice += Mathf.RoundToInt((randomPrice - currentPrice) * priceSensitivity);
+        float randomPrice = Random.Range(priceBounds.x, priceBounds.y);
+        currentPrice += (randomPrice - currentPrice) * priceSensitivity;
     }
 
     public Dictionary<Pollen, int> GetRequiredPollenCounts() {
