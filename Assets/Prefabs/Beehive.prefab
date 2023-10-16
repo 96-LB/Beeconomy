@@ -108,7 +108,7 @@ MonoBehaviour:
     unlocked: 0
   collectionRadius: 2
   collectionRate: 1
-  productionRate: 50
+  productionRate: 1
   position: {x: 0, y: 0}
 --- !u!61 &-3768026024551554601
 BoxCollider2D:
@@ -153,5 +153,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0133333, y: 0.81666666}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0

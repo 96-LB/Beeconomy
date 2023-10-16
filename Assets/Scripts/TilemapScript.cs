@@ -1,34 +1,38 @@
 using UnityEngine;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
 
 public class TilemapScript : MonoBehaviour
 {
+    private GameManager game;
+    private PanelManager panelManager;
+    void Start()
+    {
+        game = GameManager.Instance;
+        panelManager = PanelManager.Instance;
+    }
+    
+    Vector2Int GetMousePos() {
+        var worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var gamePos = GameManager.Instance.WorldPosToGamePos(worldPos);
+        return gamePos;
+    }
+    
     void OnMouseDown(){
         if(Input.mousePosition.x < Screen.width - 200)
         {
-            GameManager.Instance.selectedBeehive = null;
-            PanelManager.Instance.SelectRecipe(null);
+            game.selectedBeehive = null;
+            panelManager.SelectRecipe(null);
 
-            if (GameManager.Instance.addingBeehiveMode) {
-                var worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                var gamePos = GameManager.Instance.WorldPosToGamePos(new Vector2Int((int)worldPos.x, (int)worldPos.y));
-                GameManager.Instance.CreateBeehive(new Vector2Int(gamePos.x, gamePos.y));
-                GameManager.Instance.addingBeehiveMode = false;
-                var ghostBeehive = GameManager.Instance.ghostBeehive;
-                var color = ghostBeehive.GetComponent<SpriteRenderer>().color;
-                ghostBeehive.GetComponent<SpriteRenderer>().color = color.WithAlpha(0);
+            if (game.addingBeehiveMode) {
+                var pos = GetMousePos();
+                game.CreateBeehive(pos);
+                game.addingBeehiveMode = false;
+                game.ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
             }
         }
     }
 
     void Update() {
-        if (GameManager.Instance.addingBeehiveMode) {
-            var worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var gamePos = GameManager.Instance.WorldPosToGamePos(new Vector2Int((int)worldPos.x, (int)worldPos.y));
-            var ghostBeehive = GameManager.Instance.ghostBeehive;
-            var pos = ghostBeehive.transform.position;
-            ghostBeehive.transform.position = worldPos;
-        }
+        var pos= game.GamePosToWorldPos(GetMousePos());
+        game.ghostBeehive.transform.position = new Vector3(pos.x, pos.y, -4);
     }
 }

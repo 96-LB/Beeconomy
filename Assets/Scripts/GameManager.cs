@@ -51,8 +51,8 @@ public class GameManager : MonoBehaviour
                 if(Random.Range(0, 3) == 0)
                 {
                     map[i][j] = flowers[Random.Range(0, flowers.Length)];
-                    Vector2Int worldPos = GamePosToWorldPos(new Vector2Int(i, j));
-                    tilemap.SetTile(new Vector3Int(worldPos.x, worldPos.y, 0), map[i][j].tile);
+                    Vector2Int tilePos = GamePosToTilePos(new Vector2Int(i, j));
+                    tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), map[i][j].tile);
                 }
             }
         }
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     public void CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
-        Vector2Int worldPos = GamePosToWorldPos(position);
+        Vector2 worldPos = GamePosToWorldPos(position);
         beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
@@ -109,12 +109,16 @@ public class GameManager : MonoBehaviour
         beehives.Add(beehive);
     }
 
-    public Vector2Int GamePosToWorldPos(Vector2Int gamePos) {
+    private Vector2Int GamePosToTilePos(Vector2Int gamePos) {
         return new Vector2Int(gamePos.x - mapSize.x / 2, gamePos.y - mapSize.y / 2);
     }
+    
+    public Vector2 GamePosToWorldPos(Vector2Int gamePos) {
+        return new Vector2((gamePos.x - mapSize.x / 2) * tilemap.layoutGrid.cellSize.x, (gamePos.y - mapSize.y / 2) * tilemap.layoutGrid.cellSize.y);
+    }
 
-    public Vector2Int WorldPosToGamePos(Vector2Int worldPos) {
-        return new Vector2Int(worldPos.x + mapSize.x / 2, worldPos.y + mapSize.y / 2);
+    public Vector2Int WorldPosToGamePos(Vector2 worldPos) {
+        return new Vector2Int(Mathf.RoundToInt(worldPos.x / tilemap.layoutGrid.cellSize.x) + mapSize.x / 2, Mathf.RoundToInt(worldPos.y / tilemap.layoutGrid.cellSize.y) + mapSize.y / 2);
     }
     
     public void TradingTick() {
@@ -164,8 +168,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void EnterAddHiveMode() {
+        ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
         addingBeehiveMode = true;
-        var color = ghostBeehive.GetComponent<SpriteRenderer>().color;
-        ghostBeehive.GetComponent<SpriteRenderer>().color = color.WithAlpha(0.5f);
     }
 }

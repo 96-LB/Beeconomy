@@ -50,12 +50,8 @@ public class Beehive : MonoBehaviour, IComparable
             return 0;
         }
         
-        float stock = inventory.GetValueOrDefault(pollen);
-        float surplus = Mathf.Pow(0.9f, stock / (outFlow - inFlow));
-        
-        float pollenRatio = (float)recipe.GetRequiredPollenCounts()[pollen] / recipe.GetRequiredPollenCounts().Values.Sum();
-        float baseValue = recipe.currentPrice * pollenRatio;
-        
+        float surplus = Mathf.Pow(0.9f, inventory.GetValueOrDefault(pollen) / (outFlow - inFlow));
+        float baseValue = recipe.currentPrice / recipe.GetRequiredPollenCounts().Values.Sum();
         return surplus * baseValue;
     }
 
