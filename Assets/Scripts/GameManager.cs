@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -48,7 +47,7 @@ public class GameManager : MonoBehaviour
             map[i] = new Flower[mapSize.y];
             for(var j = 0; j < mapSize.y; j++)
             {
-                if(Random.Range(0, 3) == 0)
+                if(Random.Range(0, 5) == 0)
                 {
                     map[i][j] = flowers[Random.Range(0, flowers.Length)];
                     Vector2Int tilePos = GamePosToTilePos(new Vector2Int(i, j));
@@ -56,9 +55,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
-        CreateBeehive(new Vector2Int(2, 3));
-        CreateBeehive(new Vector2Int(4, 7));
     }
     
     void Update() {
@@ -132,6 +128,9 @@ public class GameManager : MonoBehaviour
     }
     
     private bool TradePollen(Pollen pollen) {
+        if(beehives.Count < 2) {
+            return false;
+        }
         ShuffleHives();
         var buyer = beehives.Select(hive => (
             bid: Mathf.Min(hive.honey, hive.Value(pollen)),
