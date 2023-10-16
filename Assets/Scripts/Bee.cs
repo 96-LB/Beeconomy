@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Bee : MonoBehaviour
@@ -8,18 +7,15 @@ public class Bee : MonoBehaviour
     
     float count;
     Vector2 velocity;
-    public float swaySpeed = 1/100f;
-    public float sway = 1f;
+    public float swaySpeed;
+    public float sway;
     public float speed = 1/50f;
     
     [Range(0, 1)]
     public float acceleration = 1/10f;
     
     void Start() {
-        path.Append(new(0, 0));
-        path.Append(new(4, 6));
-        path.Append(new(1, -4));
-        path.Append(new(0, 0));
+        count = Random.Range(0, 2 * Mathf.PI);
     }
     
     void FixedUpdate() {
