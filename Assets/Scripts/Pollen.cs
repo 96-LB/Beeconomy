@@ -3,5 +3,7 @@ public enum Pollen {
     Clover,
     Wildflower,
     OrangeBlossom,
-    Sunflower
+    Blueberry,
+    Purple,
+    Oil
 };

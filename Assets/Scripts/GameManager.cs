@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
             {
                 foreach(var (pos, flower) in sources) {
                     float dist = Vector2.Distance(new(i, j), pos);
-                    if(Random.Range(0, 1f) < flower.height / (Mathf.Pow(dist / flower.stdev, 2) + 1))
+                    if(Random.Range(0, 1f) < flower.height / (Mathf.Pow(dist / flower.stdev, 4) + 1))
                     {
                         map[i][j] = flower;
                         Vector2Int tilePos = GamePosToTilePos(new(i, j));
