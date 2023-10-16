@@ -4,7 +4,7 @@ public class CameraScript : InputBehaviour
 {
     
     public const float cameraSpeed = 0.25f;
-    public Vector2 bounds = new(8,6);
+    public Vector2 bounds = new(20, 20);
     
     
     void Start()

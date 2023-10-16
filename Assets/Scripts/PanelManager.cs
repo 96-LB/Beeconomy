@@ -13,8 +13,9 @@ public class PanelManager : MonoBehaviour
     public TextMeshProUGUI recipeInfoTitleText;
     public GameObject[] recipeImages;
     public GameObject[] recipeInfoPollenImages;
+    public TextMeshProUGUI honeyText;
+    public GameObject[] inventoryImages;
 
-    // Start is called before the first frame update
     void Start() {
         if(Instance != null) {
             throw new UnityException("PanelManager instance already exists.");
@@ -46,13 +47,37 @@ public class PanelManager : MonoBehaviour
         panel.localScale = new Vector3(Mathf.Lerp(panel.localScale.x, x, 0.2f), 1, 1);
     }
     
+    public void Tick()
+    {
+        if(!game.selectedBeehive)
+            return;
+        honeyText.text = $" ħ{game.selectedBeehive.honey:F2}";
+        var inventory = game.selectedBeehive.inventory;
+        for(int i = 0; i < inventoryImages.Length; i++)
+        {
+            var inventoryImage = inventoryImages[i];
+            if(i < inventory.Count)
+            {
+                var entry = inventory.ElementAt(i);
+                var flower = game.flowers.Where(x => x.pollen == entry.Key).First();
+                inventoryImage.SetActive(true);
+                inventoryImage.GetComponent<Image>().sprite = flower.tile.sprite;
+                inventoryImage.GetComponentInChildren<TextMeshProUGUI>().text = Mathf.FloorToInt(entry.Value).ToString();
+            }
+            else
+            {
+                inventoryImage.SetActive(false);
+            }
+        }
+    }
+    
     public void SelectRecipe(Recipe recipe)
     {
         if (recipe != null) {
             recipeInfoTitleText.text = recipe.name;
             var requiredPollenCounts = recipe.GetRequiredPollenCounts();
             var pollenList = requiredPollenCounts.Keys.ToList();
-            for (int i = 0; i < recipeInfoPollenImages.Count(); i++) {
+            for (int i = 0; i < recipeInfoPollenImages.Length; i++) {
                 if(i >= pollenList.Count) {
                     recipeInfoPollenImages[i].SetActive(false);
                 }
@@ -73,5 +98,6 @@ public class PanelManager : MonoBehaviour
         {
             x = 0;
         }
+        Tick();
     }
 }

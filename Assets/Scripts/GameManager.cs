@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,13 +26,14 @@ public class GameManager : MonoBehaviour
     
     public Beehive selectedBeehive;
 
-    public bool addingBeehiveMode = false;
+    public bool addHiveMode = false;
     public GameObject ghostBeehive;
 
     private int framesSinceLastTick;
-    private static int TICK_RATE = 250;
-    
-    private float honey = 0;
+    private const int TICK_RATE = 50;
+    private const int BEEHIVE_COST = 100;
+    private float honey = BEEHIVE_COST * 2;
+    public Image newBeehiveButton;
     
     void Start()
     {
@@ -48,21 +49,25 @@ public class GameManager : MonoBehaviour
             map[i] = new Flower[mapSize.y];
             for(var j = 0; j < mapSize.y; j++)
             {
-                if(Random.Range(0, 3) == 0)
+                if(Random.Range(0, 5) == 0)
                 {
                     map[i][j] = flowers[Random.Range(0, flowers.Length)];
-                    Vector2Int worldPos = GamePosToWorldPos(new Vector2Int(i, j));
-                    tilemap.SetTile(new Vector3Int(worldPos.x, worldPos.y, 0), map[i][j].tile);
+                    Vector2Int tilePos = GamePosToTilePos(new Vector2Int(i, j));
+                    tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), map[i][j].tile);
                 }
             }
         }
-
-        CreateBeehive(new Vector2Int(2, 3), recipes[0], "Beehive 1");
-        CreateBeehive(new Vector2Int(4, 7), recipes[0], "Beehive 2");
     }
     
     void Update() {
-        honeyText.text = $" ħ{honey}";
+        honeyText.text = $" ħ{honey:F2}";
+        if(addHiveMode) {
+            newBeehiveButton.color = Color.green;
+        } else if(honey < BEEHIVE_COST) {
+            newBeehiveButton.color = Color.red;
+        } else {
+            newBeehiveButton.color = Color.white;
+        }
     }
     
     void FixedUpdate() {
@@ -79,14 +84,14 @@ public class GameManager : MonoBehaviour
         foreach(var beehive in beehives) {
             beehive.CreateHoney();
         }
-        Debug.Log("TICK");
+        PanelManager.Instance.Tick();
     }
     
     public Flower[] GetFlowers(Vector2Int location, int radius) {
         var ret = new List<Flower>();
         
-        for(int i = location.x - radius; i < location.x + radius; i++) {
-            for(int j = location.y - radius; j < location.y + radius; j++) {
+        for(int i = location.x - radius; i <= location.x + radius; i++) {
+            for(int j = location.y - radius; j <= location.y + radius; j++) {
                 if(i < 0 || i >= map.Length || j < 0 || j >= map[i].Length) {
                     continue;
                 }
@@ -99,23 +104,47 @@ public class GameManager : MonoBehaviour
         return ret.ToArray();
     }
 
-    public void CreateBeehive(Vector2Int position, Recipe startingRecipe, string name) {
+    public Beehive CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
-        beehiveObj.name = name;
-        Vector2Int worldPos = GamePosToWorldPos(position);
+        Vector2 worldPos = GamePosToWorldPos(position);
         beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
-        beehive.recipe = startingRecipe;
+        beehive.recipe = recipes[0];
         beehives.Add(beehive);
+        SelectBeehive(beehive);
+        addHiveMode = false;
+        ghostBeehive.GetComponent<SpriteRenderer>().color = Color.clear;
+        honey -= BEEHIVE_COST;
+        return beehive;
     }
-
-    public Vector2Int GamePosToWorldPos(Vector2Int gamePos) {
+    
+    public void SelectBeehive(Beehive beehive) {
+        if(selectedBeehive) {
+            selectedBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        }
+        selectedBeehive = beehive;
+        if(beehive == null)
+        {
+            PanelManager.Instance.SelectRecipe(null);
+        }
+        else
+        {
+            beehive.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 1);
+            PanelManager.Instance.SelectRecipe(selectedBeehive.recipe);
+        }
+    }
+    
+    private Vector2Int GamePosToTilePos(Vector2Int gamePos) {
         return new Vector2Int(gamePos.x - mapSize.x / 2, gamePos.y - mapSize.y / 2);
     }
+    
+    public Vector2 GamePosToWorldPos(Vector2Int gamePos) {
+        return new Vector2((gamePos.x - mapSize.x / 2) * tilemap.layoutGrid.cellSize.x, (gamePos.y - mapSize.y / 2) * tilemap.layoutGrid.cellSize.y);
+    }
 
-    public Vector2Int WorldPosToGamePos(Vector2Int worldPos) {
-        return new Vector2Int(worldPos.x + mapSize.x / 2, worldPos.y + mapSize.y / 2);
+    public Vector2Int WorldPosToGamePos(Vector2 worldPos) {
+        return new Vector2Int(Mathf.RoundToInt(worldPos.x / tilemap.layoutGrid.cellSize.x) + mapSize.x / 2, Mathf.RoundToInt(worldPos.y / tilemap.layoutGrid.cellSize.y) + mapSize.y / 2);
     }
     
     public void TradingTick() {
@@ -129,21 +158,21 @@ public class GameManager : MonoBehaviour
     }
     
     private bool TradePollen(Pollen pollen) {
+        if(beehives.Count < 2) {
+            return false;
+        }
         ShuffleHives();
         var buyer = beehives.Select(hive => (
             bid: Mathf.Min(hive.honey, hive.Value(pollen)),
             hive
         )).Max();
         ShuffleHives();
-        Debug.Log($"{buyer.hive.name} wants to buy {pollen} for {buyer.bid}");
         
         foreach(Beehive seller in beehives) {
-            const float TAX = 0.99f;
+            const float TAX = 0.09f;
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
-            Debug.Log($"{seller.name} wants to sell {pollen} for {seller.Value(pollen) + TAX}");
             if(seller.Value(pollen) + TAX >= buyer.bid) continue;
 
-            Debug.Log($"{buyer.hive.name} bought {pollen} from {seller.name} for {buyer.bid}");
             
             seller.honey += buyer.bid - TAX;
             buyer.hive.honey -= buyer.bid;
@@ -167,9 +196,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterAddHiveMode() {
-        addingBeehiveMode = true;
-        var color = ghostBeehive.GetComponent<SpriteRenderer>().color;
-        ghostBeehive.GetComponent<SpriteRenderer>().color = color.WithAlpha(0.5f);
+    public void ToggleHiveMode() {
+        if(addHiveMode)
+        {
+            addHiveMode = false;
+            ghostBeehive.GetComponent<SpriteRenderer>().color = Color.clear;
+        }
+        else if(honey >= BEEHIVE_COST)
+        {
+            addHiveMode = true;
+            ghostBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+        }
     }
 }
