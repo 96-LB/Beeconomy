@@ -49,20 +49,36 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         tilemap.ClearAllTiles();
+        
+        
+        List<(Vector2 pos, Flower flower)> sources = new();
+        foreach(Flower flower in flowers) {
+            for(int i = 0; i < flower.sources; i++) {
+                Vector2 pos = new(Random.Range(0f, mapSize.x), Random.Range(0f, mapSize.y));
+                sources.Add((pos, flower));
+            }
+        }
+        
         map = new Flower[mapSize.x][];
         for(var i = 0; i < mapSize.x; i++)
         {
             map[i] = new Flower[mapSize.y];
             for(var j = 0; j < mapSize.y; j++)
             {
-                if(Random.Range(0, 5) == 0)
-                {
-                    map[i][j] = flowers[Random.Range(0, flowers.Length)];
-                    Vector2Int tilePos = GamePosToTilePos(new Vector2Int(i, j));
-                    tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), map[i][j].tile);
+                foreach(var (pos, flower) in sources) {
+                    float dist = Vector2.Distance(new(i, j), pos);
+                    if(Random.Range(0, 1f) < flower.height / (Mathf.Pow(dist / flower.stdev, 2) + 1))
+                    {
+                        map[i][j] = flower;
+                        Vector2Int tilePos = GamePosToTilePos(new(i, j));
+                        tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), flower.tile);
+                        break;
+                    }
                 }
             }
         }
+        
+        
         SetTax();
     }
     

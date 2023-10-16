@@ -2019,7 +2019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beehivePrefab: {fileID: 1081327656940542406, guid: 6f97eb071c4e943da98b38ac4b4ea7a3, type: 3}
   honeyText: {fileID: 66209730}
-  mapSize: {x: 59, y: 50}
+  mapSize: {x: 59, y: 51}
   recipes:
   - name: Clover
     sprite: {fileID: 21300000, guid: 6bf0169d6a0e5a0498f595499e67a1ea, type: 3}
@@ -2050,26 +2050,44 @@ MonoBehaviour:
     pollen: 0
     amount: 1
     tile: {fileID: 11400000, guid: ff90d210a2c9f5548858163e31a14f77, type: 2}
+    sources: 1
+    height: 0.6
+    stdev: 5
   - name: Wildflower
     pollen: 1
     amount: 1
     tile: {fileID: 11400000, guid: 41e846810349fb84eac1aa04e883ec24, type: 2}
+    sources: 3
+    height: 0.1
+    stdev: 10
   - name: Orange Blossom
     pollen: 2
     amount: 1
     tile: {fileID: 11400000, guid: c089f38f0c6b34449bab5de8813a5c33, type: 2}
+    sources: 3
+    height: 1.5
+    stdev: 1.5
   - name: Wildflower2
     pollen: 1
     amount: 1
     tile: {fileID: 11400000, guid: c2bd7b342a31958408b93fb3ddfa2020, type: 2}
+    sources: 3
+    height: 0.05
+    stdev: 10
   - name: Wildflower3
     pollen: 1
     amount: 1
     tile: {fileID: 11400000, guid: 3263b4099480a5d42843fa61812f7053, type: 2}
+    sources: 3
+    height: 0.025
+    stdev: 10
   - name: Wildflower4
     pollen: 1
     amount: 1
     tile: {fileID: 11400000, guid: 241bc0620aac0df468c07b1e11e4a959, type: 2}
+    sources: 3
+    height: 0.0125
+    stdev: 10
   tilemap: {fileID: 965249604}
   selectedBeehive: {fileID: 0}
   addHiveMode: 0
@@ -6839,7 +6857,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
