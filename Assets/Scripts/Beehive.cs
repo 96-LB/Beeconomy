@@ -49,7 +49,7 @@ public class Beehive : MonoBehaviour, IComparable
             return 0;
         }
         
-        float surplus = Mathf.Pow(0.9f, inventory.GetValueOrDefault(pollen) / (outFlow - inFlow));
+        float surplus = Mathf.Pow(0.75f, inventory.GetValueOrDefault(pollen) / (outFlow - inFlow));
         float baseValue = recipe.currentPrice / recipe.GetRequiredPollenCounts().Values.Sum();
         return surplus * baseValue;
     }

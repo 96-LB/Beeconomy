@@ -102,6 +102,20 @@ public class PanelManager : MonoBehaviour
                 game.selectedBeehive.recipe = recipe;
             }
             x = 1;
+            
+            for(int i = 0; i < recipeImages.Length; i++)
+            {
+                var recipeImage = recipeImages[i];
+                if(i < game.recipes.Length)
+                {
+                    recipeImage.GetComponent<Image>().color = recipe == game.recipes[i] ? Color.green : new Color(1, 1, 1, 0.5f);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
         }
         else
         {
