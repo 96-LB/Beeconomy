@@ -29,10 +29,13 @@ public class GameManager : MonoBehaviour
     public bool addHiveMode = false;
     public GameObject ghostBeehive;
 
-    private int framesSinceLastTick;
     private const int TICK_RATE = 50;
     private const int BEEHIVE_COST = 100;
+    private const int PRICE_RATE = 10;
     private float honey = BEEHIVE_COST * 2;
+    private int framesSinceLastTick;
+    private int ticksSinceLastPriceTick = PRICE_RATE;
+    
     public Image newBeehiveButton;
     public GameObject beeObj;
     private float tax = 0.1f / 100;
@@ -46,20 +49,36 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         tilemap.ClearAllTiles();
+        
+        
+        List<(Vector2 pos, Flower flower)> sources = new();
+        foreach(Flower flower in flowers) {
+            for(int i = 0; i < flower.sources; i++) {
+                Vector2 pos = new(Random.Range(0f, mapSize.x), Random.Range(0f, mapSize.y));
+                sources.Add((pos, flower));
+            }
+        }
+        
         map = new Flower[mapSize.x][];
         for(var i = 0; i < mapSize.x; i++)
         {
             map[i] = new Flower[mapSize.y];
             for(var j = 0; j < mapSize.y; j++)
             {
-                if(Random.Range(0, 5) == 0)
-                {
-                    map[i][j] = flowers[Random.Range(0, flowers.Length)];
-                    Vector2Int tilePos = GamePosToTilePos(new Vector2Int(i, j));
-                    tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), map[i][j].tile);
+                foreach(var (pos, flower) in sources) {
+                    float dist = Vector2.Distance(new(i, j), pos);
+                    if(Random.Range(0, 1f) < flower.height / (Mathf.Pow(dist / flower.stdev, 4) + 1))
+                    {
+                        map[i][j] = flower;
+                        Vector2Int tilePos = GamePosToTilePos(new(i, j));
+                        tilemap.SetTile(new Vector3Int(tilePos.x, tilePos.y, 0), flower.tile);
+                        break;
+                    }
                 }
             }
         }
+        
+        
         SetTax();
     }
     
@@ -80,7 +99,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         framesSinceLastTick = 0;
-
+        
         foreach (var beehive in beehives) {
             beehive.CollectPollen();
             
@@ -111,6 +130,16 @@ public class GameManager : MonoBehaviour
             beehive.CreateHoney();
         }
         PanelManager.Instance.Tick();
+        
+        ticksSinceLastPriceTick++;
+        if(ticksSinceLastPriceTick < PRICE_RATE) {
+            return;
+        }
+        ticksSinceLastPriceTick = 0;
+        
+        foreach(Recipe recipe in recipes) {
+            recipe.UpdatePrice();
+        }
     }
     
     public Flower[] GetFlowers(Vector2Int location, int radius) {
@@ -133,7 +162,7 @@ public class GameManager : MonoBehaviour
     public Beehive CreateBeehive(Vector2Int position) {
         GameObject beehiveObj = Instantiate(beehivePrefab);
         Vector2 worldPos = GamePosToWorldPos(position);
-        beehiveObj.transform.position = new Vector3(worldPos.x, worldPos.y, beehiveObj.transform.position.z);
+        beehiveObj.transform.position = worldPos;
         Beehive beehive = beehiveObj.GetComponent<Beehive>();
         beehive.position = position;
         beehive.recipe = recipes[0];
@@ -238,7 +267,7 @@ public class GameManager : MonoBehaviour
     
     public void SendBee(Vector2Int startPos, Sprite load, params Vector2Int[] path) {
         var pos = GamePosToWorldPos(startPos);
-        GameObject obj = Instantiate(beeObj, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
+        GameObject obj = Instantiate(beeObj, pos, Quaternion.identity);
         Bee bee = obj.GetComponent<Bee>();
         foreach(Vector2Int pathPos in path) {
             bee.path.Add(GamePosToWorldPos(pathPos));

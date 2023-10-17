@@ -7,4 +7,10 @@ public class Flower {
     public Pollen pollen;
     public int amount;
     public Tile tile;
+    
+    
+    public int sources;
+    public float height;
+    public float stdev;
+    
 };

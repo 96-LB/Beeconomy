@@ -38,6 +38,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 3193116405
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: plants
+    uniqueID: 1770234085
+    locked: 0
+  - name: bees
+    uniqueID: 3922389705
+    locked: 0
+  - name: hives
+    uniqueID: 4262180011
     locked: 0

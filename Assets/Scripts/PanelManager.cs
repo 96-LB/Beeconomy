@@ -1,6 +1,6 @@
+using System;
 using System.Linq;
 using TMPro;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +13,7 @@ public class PanelManager : MonoBehaviour
     public TextMeshProUGUI recipeInfoTitleText;
     public GameObject[] recipeImages;
     public GameObject[] recipeInfoPollenImages;
+    public TextMeshProUGUI priceText;
     public TextMeshProUGUI honeyText;
     public GameObject[] inventoryImages;
 
@@ -31,17 +32,14 @@ public class PanelManager : MonoBehaviour
                 var recipe = game.recipes[i];
                 recipeImage.GetComponent<Image>().sprite = recipe.sprite;
                 recipeImage.AddComponent<RecipeInfoButton>().recipe = recipe;
-                
             }
             else
             {
                 recipeImage.SetActive(false);
             }
         }
-        
     }
-
-    // Update is called once per frame
+    
     void FixedUpdate()
     {
         panel.localScale = new Vector3(Mathf.Lerp(panel.localScale.x, x, 0.2f), 1, 1);
@@ -51,7 +49,17 @@ public class PanelManager : MonoBehaviour
     {
         if(!game.selectedBeehive)
             return;
+            
         honeyText.text = $" ħ{game.selectedBeehive.honey:F2}";
+        
+        Recipe recipe = game.selectedBeehive.recipe;
+        priceText.text = $"ħ{recipe.currentPrice:F2} per unit";
+            float avgPrice = (recipe.priceBounds.x + recipe.priceBounds.y) / 2f;
+            float bounds = recipe.priceBounds.y - recipe.priceBounds.x / 2f;
+            float t = Mathf.Pow(Math.Abs(recipe.currentPrice - avgPrice) / bounds, 0.5f);
+            Color c = recipe.currentPrice > avgPrice ? Color.green : Color.red;
+            priceText.color = Color.Lerp(Color.white, c, t);
+        
         var inventory = game.selectedBeehive.inventory;
         for(int i = 0; i < inventoryImages.Length; i++)
         {
@@ -75,6 +83,7 @@ public class PanelManager : MonoBehaviour
     {
         if (recipe != null) {
             recipeInfoTitleText.text = recipe.name;
+            
             var requiredPollenCounts = recipe.GetRequiredPollenCounts();
             var pollenList = requiredPollenCounts.Keys.ToList();
             for (int i = 0; i < recipeInfoPollenImages.Length; i++) {
@@ -93,6 +102,20 @@ public class PanelManager : MonoBehaviour
                 game.selectedBeehive.recipe = recipe;
             }
             x = 1;
+            
+            for(int i = 0; i < recipeImages.Length; i++)
+            {
+                var recipeImage = recipeImages[i];
+                if(i < game.recipes.Length)
+                {
+                    recipeImage.GetComponent<Image>().color = recipe == game.recipes[i] ? Color.green : new Color(1, 1, 1, 0.5f);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
         }
         else
         {
