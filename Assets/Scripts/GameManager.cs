@@ -175,6 +175,9 @@ public class GameManager : MonoBehaviour
     }
     
     public void SelectBeehive(Beehive beehive) {
+        if(beehive == selectedBeehive) {
+            beehive = null;
+        }
         if(selectedBeehive) {
             selectedBeehive.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
         }
@@ -225,7 +228,7 @@ public class GameManager : MonoBehaviour
         
         foreach(Beehive seller in beehives) {
             if(seller.inventory.GetValueOrDefault(pollen) <= 0) continue;
-            if(seller.Value(pollen) + tax >= buyer.bid) continue;
+            if(seller.Value(pollen, stock: -1) + tax > buyer.bid) continue;
 
             seller.honey += buyer.bid - tax;
             buyer.hive.honey -= buyer.bid;

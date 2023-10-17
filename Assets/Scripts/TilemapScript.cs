@@ -15,14 +15,10 @@ public class TilemapScript : MonoBehaviour
     }
     
     void OnMouseDown(){
-        if (game.addHiveMode) {
-            if(Input.mousePosition.x < 100 && Input.mousePosition.y < 100) {
-                game.ToggleHiveMode(); // actually disables it
-            }
+        if (game.addHiveMode && (Input.mousePosition.x > 100 || Input.mousePosition.y > 100)) {
             var pos = GetMousePos();
             game.CreateBeehive(pos);
-        } else if(Input.mousePosition.x < Screen.width - 200)
-        {
+        } else if(Input.mousePosition.x < Screen.width - 200) {
             game.SelectBeehive(null);
         }
     }
