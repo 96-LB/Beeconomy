@@ -2076,6 +2076,34 @@ MonoBehaviour:
     currentPrice: 400
     unlocked: 1
   flowers:
+  - name: Purple
+    pollen: 4
+    amount: 1
+    tile: {fileID: 11400000, guid: d60793263d25d7f4a97e3da8455f55e4, type: 2}
+    sources: 1
+    height: 12
+    stdev: 0.22
+  - name: Oil
+    pollen: 5
+    amount: 1
+    tile: {fileID: 11400000, guid: 507aba4400f88784e9bdd2d92202aecf, type: 2}
+    sources: 12
+    height: 3
+    stdev: 0.5
+  - name: Orange Blossom
+    pollen: 2
+    amount: 1
+    tile: {fileID: 11400000, guid: c089f38f0c6b34449bab5de8813a5c33, type: 2}
+    sources: 3
+    height: 1
+    stdev: 2
+  - name: Blueberry
+    pollen: 3
+    amount: 1
+    tile: {fileID: 11400000, guid: 580d4e6f2197b224793cb58cc33af5b9, type: 2}
+    sources: 3
+    height: 0.5
+    stdev: 2.5
   - name: Clover
     pollen: 0
     amount: 1
@@ -5866,7 +5894,7 @@ Transform:
   m_GameObject: {fileID: 1619467536}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
